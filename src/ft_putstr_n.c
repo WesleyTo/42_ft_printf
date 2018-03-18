@@ -1,32 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strrchr.c                                       :+:      :+:    :+:   */
+/*   ft_putstr_n.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wto <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/20 23:34:10 by wto               #+#    #+#             */
-/*   Updated: 2018/02/20 23:34:13 by wto              ###   ########.fr       */
+/*   Created: 2018/03/16 16:46:44 by wto               #+#    #+#             */
+/*   Updated: 2018/03/16 16:46:46 by wto              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
 /*
-** The strrchr() function is identical to strchr(), except it locates the
-** last occurrence of c.
+** Outputs up to n characters of the string s to the standard output.
+** If n is greater than the length of s, ft_putstr_n outputs all of s up
+** until the nul-terminator.
+** ft_putstr_n returns the number of characters actually outputted.
 */
 
-char	*ft_strrchr(const char *s, int c)
+int	ft_putstr_n(char const *s, int n)
 {
-	int len;
+	int i;
 
-	len = ft_strlen(s);
-	while (len >= 0)
+	i = 0;
+	while (*s && i < n)
 	{
-		if (s[len] == (unsigned char)c)
-			return ((char *)(s + len));
-		len--;
+		ft_putchar_fd(*s++, 1);
+		i++;
 	}
-	return (NULL);
+	return (i);
 }

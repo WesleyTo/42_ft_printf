@@ -18,7 +18,7 @@
 ** supported. If the allocation fails, the function returns NULL
 */
 
-int		logbase10(long n)
+static int	logbase10(long n)
 {
 	int log;
 
@@ -33,7 +33,7 @@ int		logbase10(long n)
 	return (log);
 }
 
-char	*ft_itoa(int n)
+char		*ft_itoa(int n)
 {
 	int		len;
 	char	*a;

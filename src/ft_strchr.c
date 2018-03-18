@@ -1,33 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_n.c                                      :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wto <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/16 16:46:44 by wto               #+#    #+#             */
-/*   Updated: 2018/03/16 16:46:46 by wto              ###   ########.fr       */
+/*   Created: 2018/02/20 23:28:41 by wto               #+#    #+#             */
+/*   Updated: 2018/02/20 23:28:42 by wto              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
 /*
-** Outputs up to n characters of the string s to the standard output.
-** If n is greater than the length of s, ft_putstr_n outputs all of s up
-** until the nul-terminator.
-** ft_putstr_n returns the number of characters actually outputted.
+** The ft_strchr() function locates the first occurrence of c (converted to a 
+** char) in the string pointed to by s.  The terminating null character is 
+** considered to be part of the string; therefore if c is `\0', the functions
+** locate the terminating `\0'.
 */
 
-int	ft_putstr_n(char const *s, int n)
+char	*ft_strchr(const char *s, int c)
 {
 	int i;
 
 	i = 0;
-	while (*s && i < n)
+	while (s[i] != '\0')
 	{
-		ft_putchar_fd(*s++, 1);
+		if (s[i] == (unsigned char)c)
+			return ((char *)(s + i));
 		i++;
 	}
-	return (i);
+	if (s[i] == (unsigned char)c)
+		return ((char *)(s + i));
+	return (NULL);
 }

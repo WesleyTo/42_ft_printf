@@ -1,0 +1,1 @@
+norminette && make re && gcc -Wall -Wextra -Werror -o main main.c libftprintf.a && ./main && make fclean

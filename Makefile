@@ -5,17 +5,12 @@
 #                                                     +:+ +:+         +:+      #
 #    By: wto <marvin@42.fr>                         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2018/02/20 19:35:45 by wto               #+#    #+#              #
-#    Updated: 2018/02/20 19:35:47 by wto              ###   ########.fr        #
+#    Created: 2018/03/16 19:35:45 by wto               #+#    #+#              #
+#    Updated: 2018/03/16 19:35:47 by wto              ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
-NAME		=	libft.a
-HSRC		=	includes/libft.h
-GCHSRC		=	includes/libft.h.gch
-CFLAGS		=	-Wall -Wextra -Werror
-RM			=	/bin/rm
-CDIR		=	src/
+NAME		=	libftprintf.a
 SRC			=	ft_atoi ft_bzero ft_isalnum ft_isalpha ft_isascii ft_isdigit \
 ft_isprint ft_itoa ft_lstadd ft_lstbuild ft_lstdel ft_lstdelone ft_lstinsert \
 ft_lstiter ft_lstmap ft_lstnew ft_lstrev ft_memalloc ft_memccpy ft_memchr \
@@ -25,17 +20,25 @@ ft_putstr_fd ft_putstr_n ft_putstr_n_fd ft_putstr ft_quicksort ft_strcat \
 ft_strchr ft_strclr ft_strcmp ft_strcpy ft_strdel ft_strdup ft_strequ \
 ft_striter ft_striteri ft_strjoin ft_strlcat ft_strlen ft_strmap ft_strmapi \
 ft_strncat ft_strncmp ft_strncpy ft_strnequ ft_strnew ft_strnstr ft_strrchr \
-ft_strsplit ft_strstr ft_strsub ft_strtrim ft_tolower ft_toupper get_next_line
+ft_strsplit ft_strstr ft_strsub ft_strtrim ft_tolower ft_toupper get_next_line \
+ft_itoa_base ft_printf
+HSRC		=	includes/libft.h
+GCHSRC		=	$(addsuffix .gch, $(HSRC))
+CDIR		=	src/
+CSRC		=	$(addprefix $(CDIR), $(addsuffix .c, $(SRC)))
+OSRC		=	$(addsuffix .o, $(SRC))
+CFLAGS		=	-Wall -Wextra -Werror
+RM			=	/bin/rm
 
 all: $(NAME)
 
 $(NAME):
-	gcc -c $(CFLAGS) $(addprefix $(CDIR), $(addsuffix .c, $(SRC))) $(HSRC)
-	ar -rc $(NAME) $(addsuffix .o, $(SRC))
+	gcc -c $(CFLAGS) $(CSRC) $(HSRC)
+	ar -rc $(NAME) $(OSRC)
 	ranlib $(NAME)
 
 clean:
-	$(RM) -rf $(addsuffix .o, $(SRC))
+	$(RM) -rf $(OSRC)
 	$(RM) -rf $(GCHSRC)
 
 fclean: clean

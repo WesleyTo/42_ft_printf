@@ -1,20 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wto <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/15 22:49:30 by wto               #+#    #+#             */
-/*   Updated: 2018/03/15 22:50:03 by wto              ###   ########.fr       */
+/*   Created: 2018/02/20 23:34:10 by wto               #+#    #+#             */
+/*   Updated: 2018/02/20 23:34:13 by wto              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
+#include "../includes/libft.h"
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdarg.h>
+/*
+** The ft_strrchr() function is identical to ft_strchr(), except it locates the
+** last occurrence of c.
+*/
 
-#endif
+char	*ft_strrchr(const char *s, int c)
+{
+	int len;
+
+	len = ft_strlen(s);
+	while (len >= 0)
+	{
+		if (s[len] == (unsigned char)c)
+			return ((char *)(s + len));
+		len--;
+	}
+	return (NULL);
+}

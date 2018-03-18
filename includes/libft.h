@@ -16,6 +16,7 @@
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdarg.h>
 
 # define ABS(x)		x < 0 ? -1 * x : x
 # define SIGN(x)	x < 0 ? -1 : 1
@@ -58,8 +59,6 @@ void			ft_putnbr(int n);
 void			ft_putnbr_fd(int n, int fd);
 void			ft_putstr(char const *s);
 void			ft_putstr_fd(char const *s, int fd);
-int				ft_putstr_n(char const *s, int n);
-int				ft_putstr_n_fd(char const *s, int n, int fd);
 char			*ft_strcat(char *s1, const char *s2);
 char			*ft_strchr(const char *s, int c);
 void			ft_strclr(char *s);
@@ -96,6 +95,10 @@ void			ft_printintarr(int *arr, size_t len);
 void			ft_putbits(unsigned char c);
 void			ft_quicksort(int *arr, int len);
 
+int				ft_putstr_n(char const *s, int n);
+int				ft_putstr_n_fd(char const *s, int n, int fd);
 int				get_next_line(const int fd, char **line);
+char			*ft_itoa_base(int n, int base);
+void			ft_printf(const char *fmt, ...);
 
 #endif

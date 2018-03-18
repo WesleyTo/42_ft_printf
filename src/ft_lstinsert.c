@@ -31,6 +31,7 @@ void		ft_lstinsert(t_list **lst, size_t n, void const *content,
 	size_t content_size)
 {
 	t_list *temp;
+	t_list *curr;
 
 	if (lst)
 	{
@@ -38,14 +39,15 @@ void		ft_lstinsert(t_list **lst, size_t n, void const *content,
 			insert_beginning(lst, content, content_size);
 		else if (*lst)
 		{
-			while ((*lst)->next && (n > 1))
+			curr = *lst;
+			while (curr->next && (n > 1))
 			{
-				(*lst) = (*lst)->next;
+				curr = curr->next;
 				n--;
 			}
-			temp = (*lst)->next;
-			(*lst)->next = ft_lstnew(content, content_size);
-			(*lst)->next->next = temp;
+			temp = curr->next;
+			curr->next = ft_lstnew(content, content_size);
+			curr->next->next = temp;
 		}
 		else
 			(*lst) = ft_lstnew(content, content_size);
