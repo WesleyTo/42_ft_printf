@@ -99,6 +99,6 @@ int				ft_putstr_n(char const *s, int n);
 int				ft_putstr_n_fd(char const *s, int n, int fd);
 int				get_next_line(const int fd, char **line);
 char			*ft_itoa_base(int n, int base);
-void			ft_printf(const char *fmt, ...);
+int				ft_printf(const char *fmt, ...);
 
 #endif
