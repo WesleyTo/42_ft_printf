@@ -1,24 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*   ft_numdigits.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wto <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/21 21:54:57 by wto               #+#    #+#             */
-/*   Updated: 2018/02/21 21:55:05 by wto              ###   ########.fr       */
+/*   Created: 2018/03/18 20:44:06 by wto               #+#    #+#             */
+/*   Updated: 2018/03/18 20:44:07 by wto              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
 /*
-** Allocate (with malloc(3)) and returns a “fresh” string ending with ’\0’
-** representing the integer n given as argument. Negative numbers must be
-** supported. If the allocation fails, the function returns NULL
+** Returns the number of digits in the number in base 10
 */
 
-char		*ft_itoa(int n)
+int	ft_numdigits(long n)
 {
-	return (ft_itoa_base(n, 10));
+	return (ft_numdigits_base(n, 10));
 }

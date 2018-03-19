@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*   ft_strupper.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wto <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/21 21:54:57 by wto               #+#    #+#             */
-/*   Updated: 2018/02/21 21:55:05 by wto              ###   ########.fr       */
+/*   Created: 2018/03/18 19:05:05 by wto               #+#    #+#             */
+/*   Updated: 2018/03/18 19:05:07 by wto              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
 /*
-** Allocate (with malloc(3)) and returns a “fresh” string ending with ’\0’
-** representing the integer n given as argument. Negative numbers must be
-** supported. If the allocation fails, the function returns NULL
+** ft_strupper takes in a pointer to a string and changes the lowercase
+** alphabetic characters in the string to their uppercase equivalent.
 */
 
-char		*ft_itoa(int n)
+void	ft_strupper(char *str)
 {
-	return (ft_itoa_base(n, 10));
+	while (*str)
+	{
+		*str = ft_toupper(*str);
+		str++;
+	}
 }

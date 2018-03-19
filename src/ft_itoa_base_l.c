@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa_base.c                                     :+:      :+:    :+:   */
+/*   ft_itoa_base_l.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wto <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/17 14:30:28 by wto               #+#    #+#             */
-/*   Updated: 2018/03/17 14:30:28 by wto              ###   ########.fr       */
+/*   Created: 2018/03/18 19:42:12 by wto               #+#    #+#             */
+/*   Updated: 2018/03/18 19:42:13 by wto              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /*
 ** Allocate (with malloc(3)) and returns a “fresh” string ending with ’\0’
-** representing the integer n given as argument. Negative numbers must be
+** representing the long n given as argument. Negative numbers must be
 ** supported. If the allocation fails, the function returns NULL
 */
 
@@ -26,18 +26,19 @@ static char	get_char(int n)
 	return (str[n]);
 }
 
-char		*ft_itoa_base(int n, int base)
+char		*ft_itoa_base_l(long n, int base)
 {
 	int		len;
 	char	*a;
 	int		bound;
-	long	newn;
 
 	a = NULL;
 	if (base >= 2)
 	{
-		newn = ((long)n) * (SIGN(n));
-		len = ft_numdigits_base(newn, base) + (base == 10 && n < 0 ? 1 : 0);
+		if (n == (long)0x8000000000000000)
+			return (ft_strdup("-9223372036854775808"));
+		n *= SIGN(n);
+		len = ft_numdigits_base(n, base) + (base == 10 && n < 0 ? 1 : 0);
 		bound = (base == 10 && n < 0 ? 1 : 0);
 		a = (char *)malloc(sizeof(char) * (len + 1));
 		if (!a)
@@ -46,8 +47,8 @@ char		*ft_itoa_base(int n, int base)
 		a[0] = '-';
 		while (len >= bound)
 		{
-			a[len--] = get_char(newn % base);
-			newn /= base;
+			a[len--] = get_char(n % base);
+			n /= base;
 		}
 	}
 	return (a);

@@ -15,95 +15,78 @@
 static int	valid_format(char c)
 {
 	return (c == 's' || c == 'S' || c == 'd' || c == 'i' || c == 'c' ||
-		c == 'o' || c == 'x' || c == 'X' || c == 'u' || c == 'p');
+		c == 'o' || c == 'x' || c == 'X' || c == 'u' || c == 'p' || c == '%');
 }
 
-void		ft_strupper(char *str)
-{
-	while (*str)
-	{
-		*str = ft_toupper(*str);
-		str++;
-	}
-}
-
-void		ft_strlower(char *str)
-{
-	while (*str)
-	{
-		*str = ft_tolower(*str);
-		str++;
-	}
-}
-
-static int	printhelp(char f, va_list ap)
+static int	printhelp(char f, va_list ap, int width)
 {
 	char			*str;
-	int				n;
+	char			*temp;
 	int				base;
 	int				printed;
-	long			nl;
 
 	printed = 0;
 	if (f == 's')
-	{
-		str = va_arg(ap, char *);
-		ft_putstr(str);
-		printed = ft_strlen(str);
-	}
+		str = ft_strdup(va_arg(ap, char *));
 	if (f == 'u')
-	{
-		nl = va_arg(ap, unsigned int);
-		str = ft_itoa_base(nl, 10);
-		ft_putstr(str);
-		printed = ft_strlen(str);
-		free(str);
-	}
+		str = ft_itoa_base_l(va_arg(ap, unsigned int), 10);
 	if (f == 'p')
 	{
-		nl = va_arg(ap, long);
-		str = ft_itoa_base(nl, 16);
+		if (sizeof(void *) > 4)
+			str = ft_itoa_base_l(va_arg(ap, long), 16);
+		else
+			str = ft_itoa_base_l(va_arg(ap, int), 16);
 		ft_strlower(str);
-		ft_putstr(str);
-		printed = ft_strlen(str);
-		free(str);
+		ft_putstr("0x");
+		printed += 2;
 	}
 	if (f == 'd' || f == 'i' || f == 'o' || f == 'x' || f == 'X')
 	{
 		base = f == 'o' || f == 'O' ? 8 : 10;
 		base = f == 'x' || f == 'X' ? 16 : base;
-		n = va_arg(ap, int);
-		str = ft_itoa_base(n, base);
+		str = ft_itoa_base(va_arg(ap, int), base);
 		if (f == 'x')
 			ft_strlower(str);
-		ft_putstr(str);
-		printed = ft_strlen(str);
-		free(str);
 	}
 	if (f == 'c')
 	{
-		n = va_arg(ap, int);
-		ft_putchar(n);
-		printed = 1;
+		str = ft_strnew(1);
+		str[0] = va_arg(ap, int);
 	}
+	if (f == '%')
+	{
+		str = ft_strnew(1);
+		str[0] = '5';
+	}
+	temp = str;
+	str = ft_padstrl(temp, ' ', width);
+	ft_putstr(str);
+	printed += ft_strlen(str);
+	free(str);
+	free(temp);
 	return (printed);
 }
 
 static int	parseformat(const char **fmt, va_list ap)
 {
 	int printed;
+	int	width;
 
 	printed = 0;
-	if (**fmt && valid_format(**fmt))
+	width = -1;
+	while (**fmt)
 	{
-		printed = printhelp(**fmt, ap);
-		(*fmt)++;
-
-	}
-	else if (**fmt && **fmt == '%')
-	{
-		ft_putchar('%');
-		printed = 1;
+		if (ft_isdigit(**fmt))
+		{
+			width = ft_atoi(*fmt);
+			(*fmt) += ft_numdigits(width);
+		}
+		else if (valid_format(**fmt))
+		{
+			printed = printhelp(**fmt, ap, width);
+			(*fmt)++;
+			return (printed);
+		}
 	}
 	return (printed);
 }

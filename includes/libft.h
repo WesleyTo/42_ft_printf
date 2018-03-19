@@ -99,6 +99,14 @@ int				ft_putstr_n(char const *s, int n);
 int				ft_putstr_n_fd(char const *s, int n, int fd);
 int				get_next_line(const int fd, char **line);
 char			*ft_itoa_base(int n, int base);
+void			ft_strupper(char *str);
+void			ft_strlower(char *str);
+char			*ft_itoa_l(long n);
+char			*ft_itoa_base_l(long n, int base);
+int				ft_numdigits(long n);
+int				ft_numdigits_base(long n, int base);
+char			*ft_padstrl(const char *str, char c, int width);
+char			*ft_padstrr(const char *str, char c, int width);
 int				ft_printf(const char *fmt, ...);
 
 #endif
