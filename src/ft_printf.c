@@ -15,10 +15,11 @@
 static int	valid_format(char c)
 {
 	return (c == 's' || c == 'S' || c == 'd' || c == 'i' || c == 'c' ||
-		c == 'o' || c == 'x' || c == 'X' || c == 'u' || c == 'p' || c == '%');
+		c == 'o' || c == 'x' || c == 'X' || c == 'u' || c == 'p' ||
+		c == '%' || c == 'D' || c == 'O');
 }
 
-static int	printhelp(char f, va_list ap, int width)
+static int	printhelp(char f, va_list ap, int width, int left, char pad)
 {
 	char			*str;
 	char			*temp;
@@ -28,9 +29,9 @@ static int	printhelp(char f, va_list ap, int width)
 	printed = 0;
 	if (f == 's')
 		str = ft_strdup(va_arg(ap, char *));
-	if (f == 'u')
-		str = ft_itoa_base_l(va_arg(ap, unsigned int), 10);
-	if (f == 'p')
+	else if (f == 'u')
+		str = ft_itoa_l(va_arg(ap, unsigned int));
+	else if (f == 'p')
 	{
 		if (sizeof(void *) > 4)
 			str = ft_itoa_base_l(va_arg(ap, long), 16);
@@ -40,26 +41,30 @@ static int	printhelp(char f, va_list ap, int width)
 		ft_putstr("0x");
 		printed += 2;
 	}
-	if (f == 'd' || f == 'i' || f == 'o' || f == 'x' || f == 'X')
+	else if (f == 'd' || f == 'D' || f == 'i')
+		str = ft_itoa_l(va_arg(ap, long));
+	else if (f == 'o' || f == 'O' || f == 'x' || f == 'X')
 	{
 		base = f == 'o' || f == 'O' ? 8 : 10;
 		base = f == 'x' || f == 'X' ? 16 : base;
-		str = ft_itoa_base(va_arg(ap, int), base);
+		str = ft_itoa_base_l(va_arg(ap, unsigned long), base);
 		if (f == 'x')
 			ft_strlower(str);
 	}
-	if (f == 'c')
+	else if (f == 'c')
 	{
 		str = ft_strnew(1);
 		str[0] = va_arg(ap, int);
 	}
-	if (f == '%')
+	else if (f == '%')
 	{
 		str = ft_strnew(1);
-		str[0] = '5';
+		str[0] = '%';
 	}
+	else
+		str = ft_strnew(0);
 	temp = str;
-	str = ft_padstrl(temp, ' ', width);
+	str = left ? ft_padstrl(temp, pad, width) : ft_padstrr(temp, pad, width);
 	ft_putstr(str);
 	printed += ft_strlen(str);
 	free(str);
@@ -71,9 +76,13 @@ static int	parseformat(const char **fmt, va_list ap)
 {
 	int printed;
 	int	width;
+	int left;
+	char pad;
 
 	printed = 0;
 	width = -1;
+	left = 1;
+	pad = ' ';
 	while (**fmt)
 	{
 		if (ft_isdigit(**fmt))
@@ -81,12 +90,24 @@ static int	parseformat(const char **fmt, va_list ap)
 			width = ft_atoi(*fmt);
 			(*fmt) += ft_numdigits(width);
 		}
+		else if (**fmt == '-')
+		{
+			left = 0;
+			(*fmt)++;
+		}
+		else if (**fmt == '0')
+		{
+			pad = '0';
+			(*fmt)++;
+		}
 		else if (valid_format(**fmt))
 		{
-			printed = printhelp(**fmt, ap, width);
+			printed = printhelp(**fmt, ap, width, left, pad);
 			(*fmt)++;
 			return (printed);
 		}
+		else
+			break ;
 	}
 	return (printed);
 }

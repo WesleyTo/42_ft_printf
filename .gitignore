@@ -11,3 +11,7 @@
 *.o
 .nfs*
 tests/*
+main.c
+main
+a.out
+test*.sh
