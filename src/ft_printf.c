@@ -19,7 +19,7 @@ static int	valid_format(char c)
 		c == '%' || c == 'D' || c == 'O' || c == 'U');
 }
 
-static int	printhelp(char f, va_list ap, int width, t_bool left, char pad)
+static int	printhelp(char f, va_list ap, int width, t_bool left, char pad, t_bool hex)
 {
 	char			*str;
 	char			*temp;
@@ -53,6 +53,8 @@ static int	printhelp(char f, va_list ap, int width, t_bool left, char pad)
 			str = ft_itoa_base_u(va_arg(ap, unsigned int), base);
 		if (f == 'x')
 			ft_strlower(str);
+		if (hex && (f == 'x' || f == 'X'))
+			ft_putstr("0x");
 	}
 	else if (f == 'c')
 		str = ft_chrstr(va_arg(ap, int));
@@ -76,10 +78,12 @@ static int	parseformat(const char **fmt, va_list ap)
 	t_bool left;
 	char pad;
 	int precision;
+	t_bool hex_prefix;
 
+	hex_prefix = FALSE;
 	printed = 0;
 	width = -1;
-	left = 1;
+	left = TRUE;
 	pad = ' ';
 	precision = -1;
 	while (**fmt)
@@ -90,6 +94,13 @@ static int	parseformat(const char **fmt, va_list ap)
 			pad = ' ';
 			(*fmt)++;
 		}
+		else if (**fmt == '#')
+		{
+			hex_prefix = TRUE;
+			(*fmt)++;
+		}
+		else if (**fmt == ' ')
+			(*fmt)++;
 		else if (**fmt == '.')
 		{
 			precision = ft_atoi(++(*fmt));
@@ -107,7 +118,7 @@ static int	parseformat(const char **fmt, va_list ap)
 		}
 		else if (valid_format(**fmt))
 		{
-			printed = printhelp(**fmt, ap, width, left, pad);
+			printed = printhelp(**fmt, ap, width, left, pad, hex_prefix);
 			(*fmt)++;
 			return (printed);
 		}
