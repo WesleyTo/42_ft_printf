@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_itoa_u.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wto <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/21 23:18:41 by wto               #+#    #+#             */
-/*   Updated: 2018/02/21 23:18:42 by wto              ###   ########.fr       */
+/*   Created: 2018/03/18 23:31:26 by wto               #+#    #+#             */
+/*   Updated: 2018/03/18 23:31:27 by wto              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
 /*
-** Outputs the character c to the standard output.
+** Allocate (with malloc(3)) and returns a “fresh” string ending with ’\0’
+** representing the unsigned integer n given as argument. If the allocation
+** fails, the function returns NULL
 */
 
-void	ft_putchar(wchar_t c)
+char	*ft_itoa_u(unsigned int n)
 {
-	ft_putchar_fd(c, 1);
+	return (ft_itoa_base_u(n, 10));
 }

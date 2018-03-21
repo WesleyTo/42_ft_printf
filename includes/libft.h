@@ -21,6 +21,10 @@
 # define ABS(x)		x < 0 ? -1 * x : x
 # define SIGN(x)	x < 0 ? -1 : 1
 # define BUFF_SIZE 32
+# define TRUE 1
+# define FALSE 0
+
+typedef int		t_bool;
 
 typedef struct	s_list
 {
@@ -28,6 +32,15 @@ typedef struct	s_list
 	size_t			content_size;
 	struct s_list	*next;
 }				t_list;
+
+typedef struct	s_format
+{
+	char	type;
+	int		width;
+	t_bool	left;
+	char	pad;
+	int		precision;
+}				t_format;
 
 int				ft_atoi(const char *str);
 void			*ft_bzero(void *s, size_t len);
@@ -51,8 +64,8 @@ void			*ft_memcpy(void *dst, const void *src, size_t n);
 void			ft_memdel(void **ap);
 void			*ft_memmove(void *dst, const void *src, size_t len);
 void			*ft_memset(void *b, int c, size_t len);
-void			ft_putchar(char c);
-void			ft_putchar_fd(char c, int fd);
+void			ft_putchar(wchar_t c);
+void			ft_putchar_fd(wchar_t c, int fd);
 void			ft_putendl(char const *s);
 void			ft_putendl_fd(char const *s, int fd);
 void			ft_putnbr(int n);
@@ -98,15 +111,23 @@ void			ft_quicksort(int *arr, int len);
 int				ft_putstr_n(char const *s, int n);
 int				ft_putstr_n_fd(char const *s, int n, int fd);
 int				get_next_line(const int fd, char **line);
+char			*ft_itoa_u(unsigned int n);
 char			*ft_itoa_base(int n, int base);
+char			*ft_itoa_base_u(unsigned int n, int base);
 void			ft_strupper(char *str);
 void			ft_strlower(char *str);
+char			*ft_itoa_u(unsigned int n);
 char			*ft_itoa_l(long n);
+char			*ft_itoa_lu(unsigned long n);
 char			*ft_itoa_base_l(long n, int base);
+char			*ft_itoa_base_lu(unsigned long n, int base);
 int				ft_numdigits(long n);
 int				ft_numdigits_base(long n, int base);
+int				ft_numdigits_u(unsigned long n);
+int				ft_numdigits_base_u(unsigned long n, int base);
 char			*ft_padstrl(const char *str, char c, int width);
 char			*ft_padstrr(const char *str, char c, int width);
+char			*ft_chrstr(int c);
 int				ft_printf(const char *fmt, ...);
 
 #endif

@@ -1,22 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_numdigits_base_u.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wto <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/21 23:18:41 by wto               #+#    #+#             */
-/*   Updated: 2018/02/21 23:18:42 by wto              ###   ########.fr       */
+/*   Created: 2018/03/19 16:01:39 by wto               #+#    #+#             */
+/*   Updated: 2018/03/19 16:01:41 by wto              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
 /*
-** Outputs the character c to the standard output.
+** Returns the number of digits in the unsigned number in the specified base
 */
 
-void	ft_putchar(wchar_t c)
+int	ft_numdigits_base_u(unsigned long n, int base)
 {
-	ft_putchar_fd(c, 1);
+	int log;
+
+	log = 0;
+	if (n == 0)
+		return (1);
+	while (n > 0)
+	{
+		n /= base;
+		log++;
+	}
+	return (log);
 }

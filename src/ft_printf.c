@@ -16,10 +16,10 @@ static int	valid_format(char c)
 {
 	return (c == 's' || c == 'S' || c == 'd' || c == 'i' || c == 'c' ||
 		c == 'o' || c == 'x' || c == 'X' || c == 'u' || c == 'p' ||
-		c == '%' || c == 'D' || c == 'O');
+		c == '%' || c == 'D' || c == 'O' || c == 'U');
 }
 
-static int	printhelp(char f, va_list ap, int width, int left, char pad)
+static int	printhelp(char f, va_list ap, int width, t_bool left, char pad)
 {
 	char			*str;
 	char			*temp;
@@ -30,7 +30,7 @@ static int	printhelp(char f, va_list ap, int width, int left, char pad)
 	if (f == 's')
 		str = ft_strdup(va_arg(ap, char *));
 	else if (f == 'u')
-		str = ft_itoa_l(va_arg(ap, unsigned int));
+		str = ft_itoa_u(va_arg(ap, unsigned int));
 	else if (f == 'p')
 	{
 		if (sizeof(void *) > 4)
@@ -39,28 +39,25 @@ static int	printhelp(char f, va_list ap, int width, int left, char pad)
 			str = ft_itoa_base_l(va_arg(ap, int), 16);
 		ft_strlower(str);
 		ft_putstr("0x");
-		printed += 2;
+		printed += 2; 
 	}
 	else if (f == 'd' || f == 'D' || f == 'i')
 		str = ft_itoa_l(va_arg(ap, long));
-	else if (f == 'o' || f == 'O' || f == 'x' || f == 'X')
+	else if (f == 'o' || f == 'O' || f == 'x' || f == 'X' || f == 'U')
 	{
 		base = f == 'o' || f == 'O' ? 8 : 10;
 		base = f == 'x' || f == 'X' ? 16 : base;
-		str = ft_itoa_base_l(va_arg(ap, unsigned long), base);
+		if (f == 'O' || f == 'U')
+			str = ft_itoa_base_lu(va_arg(ap, unsigned long), base);
+		else
+			str = ft_itoa_base_u(va_arg(ap, unsigned int), base);
 		if (f == 'x')
 			ft_strlower(str);
 	}
 	else if (f == 'c')
-	{
-		str = ft_strnew(1);
-		str[0] = va_arg(ap, int);
-	}
+		str = ft_chrstr(va_arg(ap, int));
 	else if (f == '%')
-	{
-		str = ft_strnew(1);
-		str[0] = '%';
-	}
+		str = ft_chrstr('%');
 	else
 		str = ft_strnew(0);
 	temp = str;
@@ -76,29 +73,37 @@ static int	parseformat(const char **fmt, va_list ap)
 {
 	int printed;
 	int	width;
-	int left;
+	t_bool left;
 	char pad;
+	int precision;
 
 	printed = 0;
 	width = -1;
 	left = 1;
 	pad = ' ';
+	precision = -1;
 	while (**fmt)
 	{
-		if (ft_isdigit(**fmt))
-		{
-			width = ft_atoi(*fmt);
-			(*fmt) += ft_numdigits(width);
-		}
-		else if (**fmt == '-')
+		if (**fmt == '-')
 		{
 			left = 0;
+			pad = ' ';
 			(*fmt)++;
+		}
+		else if (**fmt == '.')
+		{
+			precision = ft_atoi(++(*fmt));
+			(*fmt) += ft_numdigits(precision);
 		}
 		else if (**fmt == '0')
 		{
-			pad = '0';
+			pad = left ? '0' : ' ';
 			(*fmt)++;
+		}
+		else if (ft_isdigit(**fmt))
+		{
+			width = ft_atoi(*fmt);
+			(*fmt) += ft_numdigits(width);
 		}
 		else if (valid_format(**fmt))
 		{

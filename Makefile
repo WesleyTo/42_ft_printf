@@ -22,7 +22,8 @@ ft_striter ft_striteri ft_strjoin ft_strlcat ft_strlen ft_strmap ft_strmapi \
 ft_strncat ft_strncmp ft_strncpy ft_strnequ ft_strnew ft_strnstr ft_strrchr \
 ft_strsplit ft_strstr ft_strsub ft_strtrim ft_tolower ft_toupper get_next_line \
 ft_itoa_base ft_strupper ft_strlower ft_itoa_l ft_itoa_base_l ft_numdigits \
-ft_numdigits_base ft_padstrr ft_padstrl ft_printf
+ft_numdigits_base ft_numdigits_u ft_numdigits_base_u ft_padstrr ft_padstrl \
+ft_itoa_u ft_itoa_lu ft_itoa_base_u ft_itoa_base_lu ft_chrstr ft_printf
 HSRC		=	includes/libft.h
 GCHSRC		=	$(addsuffix .gch, $(HSRC))
 CDIR		=	src/

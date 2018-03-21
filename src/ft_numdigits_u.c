@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_numdigits_u.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wto <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/21 23:18:41 by wto               #+#    #+#             */
-/*   Updated: 2018/02/21 23:18:42 by wto              ###   ########.fr       */
+/*   Created: 2018/03/19 16:01:33 by wto               #+#    #+#             */
+/*   Updated: 2018/03/19 16:01:34 by wto              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
 /*
-** Outputs the character c to the standard output.
+** Returns the number of digits in the unsigned number in base 10
 */
 
-void	ft_putchar(wchar_t c)
+int	ft_numdigits_u(unsigned long n)
 {
-	ft_putchar_fd(c, 1);
+	return (ft_numdigits_base_u(n, 10));
 }
