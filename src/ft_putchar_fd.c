@@ -49,6 +49,11 @@ void		ft_putchar_fd(wchar_t c, int fd)
 	int				size;
 	unsigned char	buf[4];
 
-	size = uni_to_utf8((unsigned char *)buf, c);
-	write(fd, buf, size);
+	if (c == 0)
+		write(fd, &c, 1);
+	else
+	{
+		size = uni_to_utf8((unsigned char *)buf, c);
+		write(fd, buf, size);
+	}
 }
