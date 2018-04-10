@@ -63,6 +63,15 @@ static void	append_char(char c, char **str)
 	free(temp);
 }
 
+static void	trimstr(char **str, int n)
+{
+	char *temp;
+
+	temp = *str;
+	*str = ft_strncpy(ft_strnew(n), *str, n);
+	free(temp);
+}
+
 static void		padstr(char **str, t_bool left, char pad, int width)
 {
 	char *temp;
@@ -125,6 +134,8 @@ static void		printhelp(t_print *f)
 		str = ft_chrstr('%');
 	else
 		str = ft_strnew(0);
+	if (f->precision != -1 && ft_strchr("Ss", f->f))
+		trimstr(&str, f->precision);
 	if (f->hex_prefix && f->f == 'o')
 		append_char('0', &str);
 	if (!f->sign && f->spaced && str[0] != '-' && (f->f == 'd' || f->f == 'i'))
