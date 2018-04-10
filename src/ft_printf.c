@@ -47,7 +47,7 @@ static void		hexify(char **str)
 	char *temp;
 
 	temp = *str;
-	*str = ft_strjoin("0X", *str);
+	*str = ft_strjoin("0X", temp);
 	free(temp);
 }
 
@@ -58,7 +58,7 @@ static void	append_char(char c, char **str)
 
 	temp = *str;
 	temp2 = ft_chrstr(c);
-	*str = ft_strjoin(temp2, *str);
+	*str = ft_strjoin(temp2, temp);
 	free(temp2);
 	free(temp);
 }
@@ -68,7 +68,7 @@ static void	trimstr(char **str, int n)
 	char *temp;
 
 	temp = *str;
-	*str = ft_strncpy(ft_strnew(n), *str, n);
+	*str = ft_strncpy(ft_strnew(n), temp, n);
 	free(temp);
 }
 
@@ -167,6 +167,7 @@ static void		printhelp(t_print *f)
 static int		parseformat(const char **fmt, va_list ap)
 {
 	t_print *f;
+	int		n;
 
 	f = make_print_struct();
 	while (**fmt)
@@ -204,12 +205,14 @@ static int		parseformat(const char **fmt, va_list ap)
 			f->data = va_arg(ap, void *);
 			printhelp(f);
 			(*fmt)++;
-			return (f->printed);
+			break ;
 		}
 		else
 			break ;
 	}
-	return (f->printed);
+	n = f->printed;
+	free(f);
+	return (n);
 }
 
 int				ft_printf(const char *fmt, ...)
