@@ -12,25 +12,6 @@
 
 #include "../includes/libft.h"
 
-typedef struct	s_print
-{
-	int		width;
-	int		precision;
-	int		printed;
-	int		base;
-	char	pad;
-	char	f;
-	void	*data;
-	t_bool	sign;
-	t_bool	spaced;
-	t_bool	left_align;
-	t_bool	hex_prefix;
-	t_bool	l;
-	t_bool	ll;
-	t_bool	h;
-	t_bool	hh;
-}				t_print;
-
 static t_print	*make_print_struct(void)
 {
 	t_print	*s = (t_print *)malloc(sizeof(t_print));
@@ -41,29 +22,74 @@ static t_print	*make_print_struct(void)
 	s->printed = 0;
 	s->width = -1;
 	s->precision = -1;
-	s->left_align = TRUE;
+	s->left_pad = TRUE;
 	s->hex_prefix = FALSE;
-	s->pad = ' ';
+	s->zero = FALSE;
 	s->base = 0;
 	s->l = FALSE;
 	s->ll = FALSE;
 	s->h = FALSE;
 	s->hh = FALSE;
+	s->j = FALSE;
 	s->spaced = FALSE;
 	s->sign = FALSE;
 	return (s);
 }
 
+static void		putformat(char *str, t_print *f)
+{
+	ft_putstr(str);
+	f->printed += ft_strlen(str);
+}
+
+static void		hexify(char **str)
+{
+	char *temp;
+
+	temp = *str;
+	*str = ft_strjoin("0X", *str);
+	free(temp);
+}
+
+static void	append_char(char c, char **str)
+{
+	char *temp;
+	char *temp2;
+
+	temp = *str;
+	temp2 = ft_chrstr(c);
+	*str = ft_strjoin(temp2, *str);
+	free(temp2);
+	free(temp);
+}
+
+static void		padstr(char **str, t_bool left, char pad, int width)
+{
+	char *temp;
+
+	temp = *str;
+	if (left)
+		*str = ft_padstrl(temp, pad, width);
+	else
+		*str = ft_padstrr(temp, pad, width);
+	free(temp);
+}
+
 static void		printhelp(t_print *f)
 {
 	char			*str;
-	char			*temp;
 	int				base;
 	t_bool			null;
 
 	null = FALSE;
-	if (ft_tolower(f->f) == 's')
-		str = ft_strdup((char *)f->data);
+	if (ft_strchr("Ss", f->f))
+	{
+		str = (char *)f->data;
+		if (str)
+			str = ft_strdup(str);
+		else
+			str = ft_strdup("(null)");
+	}
 	else if (f->f == 'u')
 		str = ft_itoa_u((unsigned int)f->data);
 	else if (f->f == 'p')
@@ -71,14 +97,14 @@ static void		printhelp(t_print *f)
 		if (sizeof(void *) > 4)
 			str = ft_itoa_base_l((long)f->data, 16);
 		else
-			str = ft_itoa_base_l((int)f->data, 16);
+			str = ft_itoa_base((int)f->data, 16);
 		ft_strlower(str);
-		ft_putstr("0x");
-		f->printed += 2;
 	}
-	else if (f->f == 'd' || f->f == 'D' || f->f == 'i')
+	else if (f->f == 'D')
 		str = ft_itoa_l((long)f->data);
-	else if (ft_tolower(f->f) == 'o' || ft_tolower(f->f) == 'x' || f->f == 'U')
+	else if (ft_strchr("di", f->f))
+		str = ft_itoa((int)f->data);
+	else if (ft_strchr("OoXxU", f->f))
 	{
 		f->base = ft_tolower(f->f) == 'o' ? 8 : 10;
 		f->base = ft_tolower(f->f) == 'x' ? 16 : f->base;
@@ -86,12 +112,8 @@ static void		printhelp(t_print *f)
 			str = ft_itoa_base_lu((unsigned long)f->data, f->base);
 		else
 			str = ft_itoa_base_u((unsigned int)f->data, f->base);
-		if (f->f == 'x')
-			ft_strlower(str);
-		if (f->hex_prefix && (ft_tolower(f->f) == 'x'))
-			ft_putstr("0x");
 	}
-	else if (ft_tolower(f->f) == 'c')
+	else if (ft_strchr("Cc", f->f))
 	{
 		base = (int)f->data;
 		str = ft_chrstr(base);
@@ -103,14 +125,32 @@ static void		printhelp(t_print *f)
 		str = ft_chrstr('%');
 	else
 		str = ft_strnew(0);
-	temp = str;
-	str = f->left_align ? ft_padstrl(temp, f->pad, f->width) : ft_padstrr(temp, f->pad, f->width);
-	ft_putstr(str);
+	if (f->hex_prefix && f->f == 'o')
+		append_char('0', &str);
+	if (!f->sign && f->spaced && str[0] != '-' && (f->f == 'd' || f->f == 'i'))
+		append_char(' ', &str);
+	if (f->sign && ft_strchr("dD", f->f) && str[0] != '-')
+		append_char('+', &str);
+	if (f->zero)
+	{
+		if (f->f == 'p' || (ft_tolower(f->f) == 'x' && f->hex_prefix && (int)f->data))
+			f->width -= 2;
+		padstr(&str, f->left_pad, '0', f->width);
+		if (f->f == 'p' || (ft_tolower(f->f) == 'x' && f->hex_prefix && (int)f->data))
+			hexify(&str);
+	}
+	else
+	{
+		if (f->f == 'p' || (ft_tolower(f->f) == 'x' && f->hex_prefix && (int)f->data))
+			hexify(&str);
+		padstr(&str, f->left_pad, ' ', f->width);
+	}
+	if (f->f == 'x')
+		ft_strlower(str);
+	putformat(str, f);
 	if (null)
 		ft_putchar(0);
-	f->printed += ft_strlen(str);
 	free(str);
-	free(temp);
 }
 
 static int		parseformat(const char **fmt, va_list ap)
@@ -120,49 +160,27 @@ static int		parseformat(const char **fmt, va_list ap)
 	f = make_print_struct();
 	while (**fmt)
 	{
-		if (**fmt == '-')
+		if (ft_strchr("-+# 0lhj", **fmt))
 		{
-			f->left_align = FALSE;
-			(*fmt)++;
-		}
-		else if (**fmt == '+')
-		{
-			f->sign = TRUE;
-			(*fmt)++;
-		}
-		else if (**fmt == '#')
-		{
-			f->hex_prefix = TRUE;
-			(*fmt)++;
-		}
-		else if (**fmt == ' ')
-		{
-			f->spaced = TRUE;
+			f->left_pad = **fmt == '-' ? FALSE : f->left_pad;
+			f->sign = **fmt == '+' ? TRUE : f->sign;
+			f->hex_prefix = **fmt == '#' ? TRUE : f->hex_prefix;
+			f->spaced = **fmt == ' ' ? TRUE : f->spaced;
+			f->spaced = f->sign ? FALSE : f->spaced;
+			f->zero = **fmt == '0' ? TRUE : f->zero;
+			f->zero = !f->left_pad ? FALSE : f->zero;
+			f->ll = **fmt == 'l' && f->l ? TRUE : f->ll;
+			f->l = **fmt == 'l' ? TRUE : f->l;
+			f->hh = **fmt == 'h' && f->h ? TRUE : f->hh;
+			f->h = **fmt == 'h' ? TRUE : f->h;
+			f->j = **fmt == 'j' ? TRUE : f->j;
 			(*fmt)++;
 		}
 		else if (**fmt == '.')
 		{
-			f->precision = ft_atoi(++(*fmt));
-			(*fmt) += ft_numdigits(f->precision);
-		}
-		else if (**fmt == '0')
-		{
-			f->pad = f->left_align ? '0' : ' ';
-			(*fmt)++;
-		}
-		else if (**fmt == 'l')
-		{
-			if (f->l)
-				f->ll = TRUE;
-			f->l = TRUE;
-			(*fmt)++;
-		}
-		else if (**fmt == 'h')
-		{
-			if (f->h)
-				f->hh = TRUE;
-			f->h = TRUE;
-			(*fmt)++;
+			if (ft_isdigit(*(++(*fmt))))
+				f->precision = ft_atoi(*fmt);
+			(*fmt) += f->precision == -1 ? 0 : ft_numdigits(f->precision);
 		}
 		else if (ft_isdigit(**fmt))
 		{

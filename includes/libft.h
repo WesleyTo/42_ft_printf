@@ -33,14 +33,25 @@ typedef struct	s_list
 	struct s_list	*next;
 }				t_list;
 
-typedef struct	s_format
+typedef struct	s_print
 {
-	char	type;
 	int		width;
-	t_bool	left;
-	char	pad;
 	int		precision;
-}				t_format;
+	int		printed;
+	int		base;
+	char	f;
+	void	*data;
+	t_bool	zero;
+	t_bool	sign;
+	t_bool	spaced;
+	t_bool	left_pad;
+	t_bool	hex_prefix;
+	t_bool	l;
+	t_bool	ll;
+	t_bool	h;
+	t_bool	hh;
+	t_bool	j;
+}				t_print;
 
 int				ft_atoi(const char *str);
 void			*ft_bzero(void *s, size_t len);
