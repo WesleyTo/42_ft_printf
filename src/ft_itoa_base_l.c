@@ -31,25 +31,23 @@ char		*ft_itoa_base_l(long n, int base)
 	int		len;
 	char	*a;
 	int		bound;
+	int		sign;
 
-	a = NULL;
-	if (base >= 2)
+	if (n == (long)0x8000000000000000)
+		return (ft_strdup("-9223372036854775808"));
+	sign = SIGN(n);
+	n *= SIGN(n);
+	len = ft_numdigits_base(n, base) + (base == 10 && sign < 0 ? 1 : 0);
+	bound = (base == 10 && sign < 0 ? 1 : 0);
+	a = (char *)malloc(sizeof(char) * (len + 1));
+	if (!a)
+		return (NULL);
+	a[len--] = '\0';
+	a[0] = '-';
+	while (len >= bound)
 	{
-		if (n == (long)0x8000000000000000)
-			return (ft_strdup("-9223372036854775808"));
-		n *= SIGN(n);
-		len = ft_numdigits_base(n, base) + (base == 10 && n < 0 ? 1 : 0);
-		bound = (base == 10 && n < 0 ? 1 : 0);
-		a = (char *)malloc(sizeof(char) * (len + 1));
-		if (!a)
-			return (NULL);
-		a[len--] = '\0';
-		a[0] = '-';
-		while (len >= bound)
-		{
-			a[len--] = get_char(n % base);
-			n /= base;
-		}
+		a[len--] = get_char(n % base);
+		n /= base;
 	}
 	return (a);
 }
