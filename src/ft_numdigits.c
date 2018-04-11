@@ -16,7 +16,7 @@
 ** Returns the number of digits in the number in base 10
 */
 
-int	ft_numdigits(long n)
+int	ft_numdigits(long long n)
 {
 	return (ft_numdigits_base(n, 10));
 }

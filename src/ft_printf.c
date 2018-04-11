@@ -80,7 +80,7 @@ static char *handle_unum(t_print *f)
 	else if (f->h)
 		return (ft_itoa_base_u((unsigned short)f->data, f->base));
 	else if (f->ll)
-		return (ft_itoa_base_l((unsigned long long)f->data, f->base));
+		return (ft_itoa_base_llu((unsigned long long)f->data, f->base));
 	else if (f->l)
 		return (ft_itoa_base_lu((unsigned long)f->data, f->base));
 	else if (f->j)
@@ -98,9 +98,9 @@ static char		*handle_di(t_print *f)
 	else if (f->h)
 		return (ft_itoa((short)f->data));
 	else if (f->ll)
-		return (ft_itoa_l((long long)f->data));
+		return (ft_itoa_ll((long long)f->data));
 	else if (f->l)
-		return (ft_itoa_l((unsigned long)f->data));
+		return (ft_itoa_l((long)f->data));
 	else if (f->j)
 		return (ft_itoa_l((intmax_t)f->data));
 	else if (f->z)
@@ -129,8 +129,7 @@ static char		*handle_U(t_print *f)
 {
 	char *str;
 
-	f->base = 10;
-	str = ft_itoa_base_lu((unsigned long)f->data, f->base);
+	str = ft_itoa_lu((unsigned long)f->data);
 	return (str);
 }
 

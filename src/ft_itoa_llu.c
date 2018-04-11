@@ -1,32 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_numdigits_base.c                                :+:      :+:    :+:   */
+/*   ft_itoa_llu.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wto <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/18 20:44:45 by wto               #+#    #+#             */
-/*   Updated: 2018/03/18 20:44:47 by wto              ###   ########.fr       */
+/*   Created: 2018/03/18 23:31:49 by wto               #+#    #+#             */
+/*   Updated: 2018/03/18 23:31:50 by wto              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
 /*
-** Returns the number of digits in the number in the specified base
+** Allocate (with malloc(3)) and returns a “fresh” string ending with ’\0’
+** representing the unsigned long long n given as argument. If the allocation
+** fails, the function returns NULL
 */
 
-int	ft_numdigits_base(long long n, int base)
+char	*ft_itoa_llu(unsigned long long n)
 {
-	int log;
-
-	log = 0;
-	if (n == 0)
-		return (1);
-	while (n > 0)
-	{
-		n /= base;
-		log++;
-	}
-	return (log);
+	return (ft_itoa_base_llu(n, 10));
 }

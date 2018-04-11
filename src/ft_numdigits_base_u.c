@@ -16,7 +16,7 @@
 ** Returns the number of digits in the unsigned number in the specified base
 */
 
-int	ft_numdigits_base_u(unsigned long n, int base)
+int	ft_numdigits_base_u(unsigned long long n, int base)
 {
 	int log;
 

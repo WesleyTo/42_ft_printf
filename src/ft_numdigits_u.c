@@ -16,7 +16,7 @@
 ** Returns the number of digits in the unsigned number in base 10
 */
 
-int	ft_numdigits_u(unsigned long n)
+int	ft_numdigits_u(unsigned long long n)
 {
 	return (ft_numdigits_base_u(n, 10));
 }
