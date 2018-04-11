@@ -31,6 +31,7 @@ static t_print	*make_print_struct(void)
 	s->h = FALSE;
 	s->hh = FALSE;
 	s->j = FALSE;
+	s->z = FALSE;
 	s->spaced = FALSE;
 	s->sign = FALSE;
 	return (s);
@@ -72,65 +73,56 @@ static void		trimstr(char **str, int n)
 	free(temp);
 }
 
+static char *handle_unum(t_print *f)
+{
+	if (f->hh)
+		return (ft_itoa_base_u((unsigned char)f->data, f->base));
+	else if (f->h)
+		return (ft_itoa_base_u((unsigned short)f->data, f->base));
+	else if (f->ll)
+		return (ft_itoa_base_l((unsigned long long)f->data, f->base));
+	else if (f->l)
+		return (ft_itoa_base_lu((unsigned long)f->data, f->base));
+	else if (f->j)
+		return (ft_itoa_base_lu((uintmax_t)f->data, f->base));
+	else if (f->z)
+		return (ft_itoa_l((size_t)f->data));
+	else
+		return (ft_itoa_base_u((unsigned int)f->data, f->base));
+}
+
 static char		*handle_di(t_print *f)
 {
-	char *str;
-
 	if (f->hh)
-		str = ft_itoa((signed char)f->data);
+		return (ft_itoa((signed char)f->data));
 	else if (f->h)
-		str = ft_itoa((short)f->data);
+		return (ft_itoa((short)f->data));
 	else if (f->ll)
-		str = ft_itoa_l((long long)f->data);
+		return (ft_itoa_l((long long)f->data));
 	else if (f->l)
-		str = ft_itoa_l((unsigned long)f->data);
+		return (ft_itoa_l((unsigned long)f->data));
+	else if (f->j)
+		return (ft_itoa_l((intmax_t)f->data));
+	else if (f->z)
+		return (ft_itoa_l((size_t)f->data));
 	else
-		str = ft_itoa((int)f->data);
-	return (str);
+		return (ft_itoa((int)f->data));
 }
 
 static char		*handle_D(t_print *f)
 {
-	char *str;
-
-	str = ft_itoa_l((long)f->data);
-	return (str);
+	return (ft_itoa_l((long)f->data));
 }
 
-static char		*handle_xX(t_print *f)
+static char		*handle_xXuo(t_print *f)
 {
-	char *str;
-
-	f->base = 16;
-	if (f->hh)
-		str = ft_itoa_base_u((unsigned char)f->data, f->base);
-	else if (f->h)
-		str = ft_itoa_base_u((unsigned short)f->data, f->base);
-	else if (f->ll)
-		str = ft_itoa_base_l((unsigned long long)f->data, f->base);
-	else if (f->l)
-		str = ft_itoa_base_lu((unsigned long)f->data, f->base);
-	else
-		str = ft_itoa_base_u((unsigned int)f->data, f->base);
-	return (str);
-}
-
-static char		*handle_u(t_print *f)
-{
-	char *str;
-
-	f->base = 10;
-	if (f->hh)
-		str = ft_itoa_base_u((unsigned char)f->data, f->base);
-	else if (f->h)
-		str = ft_itoa_base_u((unsigned short)f->data, f->base);
-	else if (f->ll)
-		str = ft_itoa_base_l((unsigned long long)f->data, f->base);
-	else if (f->l)
-		str = ft_itoa_base_lu((unsigned long)f->data, f->base);
-	else
-		str = ft_itoa_base_u((unsigned int)f->data, f->base);
-	return (str);
+	if (f->f == 'x' || f->f == 'X')
+		f->base = 16;
+	if (f->f == 'o')
+		f->base = 8;
+	if (f->f == 'u')
+		f->base = 10;
+	return (handle_unum(f));
 }
 
 static char		*handle_U(t_print *f)
@@ -139,24 +131,6 @@ static char		*handle_U(t_print *f)
 
 	f->base = 10;
 	str = ft_itoa_base_lu((unsigned long)f->data, f->base);
-	return (str);
-}
-
-static char		*handle_o(t_print *f)
-{
-	char *str;
-
-	f->base = 8;
-	if (f->hh)
-		str = ft_itoa_base_u((unsigned char)f->data, f->base);
-	else if (f->h)
-		str = ft_itoa_base_u((unsigned short)f->data, f->base);
-	else if (f->ll)
-		str = ft_itoa_base_l((unsigned long long)f->data, f->base);
-	else if (f->l)
-		str = ft_itoa_base_lu((unsigned long)f->data, f->base);
-	else
-		str = ft_itoa_base_u((unsigned int)f->data, f->base);
 	return (str);
 }
 
@@ -209,11 +183,11 @@ static char *handle_format(t_print *f, t_bool *t)
 	if (ft_strchr("Ss", f->f))
 		return(handle_sS(f));
 	else if (f->f == 'u')
-		return(handle_u(f));
+		return(handle_xXuo(f));
 	else if (f->f == 'U')
 		return(handle_U(f));
 	else if (f->f == 'o')
-		return(handle_o(f));
+		return(handle_xXuo(f));
 	else if (f->f == 'O')
 		return(handle_O(f));
 	else if (f->f == 'p')
@@ -223,7 +197,7 @@ static char *handle_format(t_print *f, t_bool *t)
 	else if (f->f == 'd' || f->f == 'i')
 		return(handle_di(f));
 	else if (ft_tolower(f->f) == 'x')
-		return(handle_xX(f));
+		return(handle_xXuo(f));
 	else if (ft_strchr("Cc", f->f))
 		return(handle_c(f, t));
 	else if (f->f == '%')
@@ -306,6 +280,7 @@ static void set_flags(char c, t_print *f)
 	f->hh = c == 'h' && f->h ? TRUE : f->hh;
 	f->h = c == 'h' ? TRUE : f->h;
 	f->j = c == 'j' ? TRUE : f->j;
+	f->z = c == 'z' ? TRUE : f->z;
 }
 
 static int		parseformat(const char **fmt, va_list ap)
@@ -316,7 +291,7 @@ static int		parseformat(const char **fmt, va_list ap)
 	f = make_print_struct();
 	while (**fmt)
 	{
-		if (ft_strchr("-+# 0lhj", **fmt))
+		if (ft_strchr("-+# 0lhjz", **fmt))
 		{
 			set_flags(**fmt, f);
 			(*fmt)++;

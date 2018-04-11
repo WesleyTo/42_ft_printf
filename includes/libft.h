@@ -21,6 +21,8 @@
 # define ABS(x)		x < 0 ? -1 * x : x
 # define SIGN(x)	x < 0 ? -1 : 1
 # define BUFF_SIZE 32
+# define MAX_T_SIZE sizeof(intmax_t)
+# define SIZE_T_SIZE sizeof(size_t)
 # define TRUE 1
 # define FALSE 0
 
@@ -51,6 +53,7 @@ typedef struct	s_print
 	t_bool	h;
 	t_bool	hh;
 	t_bool	j;
+	t_bool	z;
 }				t_print;
 
 int				ft_atoi(const char *str);
