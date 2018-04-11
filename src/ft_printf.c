@@ -75,7 +75,9 @@ static void		trimstr(char **str, int n)
 
 static char *handle_unum(t_print *f)
 {
-	if (f->hh)
+	if (f->f == 'O')
+		return (ft_itoa_base_lu((unsigned long)f->data, f->base));
+	else if (f->hh)
 		return (ft_itoa_base_u((unsigned char)f->data, f->base));
 	else if (f->h)
 		return (ft_itoa_base_u((unsigned short)f->data, f->base));
@@ -91,9 +93,11 @@ static char *handle_unum(t_print *f)
 		return (ft_itoa_base_u((unsigned int)f->data, f->base));
 }
 
-static char		*handle_di(t_print *f)
+static char		*handle_dDi(t_print *f)
 {
-	if (f->hh)
+	if (f->f == 'D')
+		return (ft_itoa_l((long)f->data));
+	else if (f->hh)
 		return (ft_itoa((signed char)f->data));
 	else if (f->h)
 		return (ft_itoa((short)f->data));
@@ -109,16 +113,11 @@ static char		*handle_di(t_print *f)
 		return (ft_itoa((int)f->data));
 }
 
-static char		*handle_D(t_print *f)
-{
-	return (ft_itoa_l((long)f->data));
-}
-
-static char		*handle_xXuo(t_print *f)
+static char		*handle_xXuoO(t_print *f)
 {
 	if (f->f == 'x' || f->f == 'X')
 		f->base = 16;
-	if (f->f == 'o')
+	if (f->f == 'o' || f->f == 'O')
 		f->base = 8;
 	if (f->f == 'u')
 		f->base = 10;
@@ -127,19 +126,7 @@ static char		*handle_xXuo(t_print *f)
 
 static char		*handle_U(t_print *f)
 {
-	char *str;
-
-	str = ft_itoa_lu((unsigned long)f->data);
-	return (str);
-}
-
-static char		*handle_O(t_print *f)
-{
-	char *str;
-
-	f->base = 8;
-	str = ft_itoa_base_lu((unsigned long)f->data, f->base);
-	return (str);
+	return (ft_itoa_lu((unsigned long)f->data));
 }
 
 static char		*handle_sS(t_print *f)
@@ -179,25 +166,17 @@ static char		*handle_c(t_print *f, t_bool *t)
 
 static char *handle_format(t_print *f, t_bool *t)
 {
-	if (ft_strchr("Ss", f->f))
+	if (f->f == 's' || f->f == 'S')
 		return(handle_sS(f));
-	else if (f->f == 'u')
-		return(handle_xXuo(f));
 	else if (f->f == 'U')
 		return(handle_U(f));
-	else if (f->f == 'o')
-		return(handle_xXuo(f));
-	else if (f->f == 'O')
-		return(handle_O(f));
+	else if (ft_tolower(f->f) == 'o' || f->f == 'u' || ft_tolower(f->f) == 'x')
+		return(handle_xXuoO(f));
 	else if (f->f == 'p')
 		return(handle_p(f));
-	else if (f->f == 'D')
-		return(handle_D(f));
-	else if (f->f == 'd' || f->f == 'i')
-		return(handle_di(f));
-	else if (ft_tolower(f->f) == 'x')
-		return(handle_xXuo(f));
-	else if (ft_strchr("Cc", f->f))
+	else if (f->f == 'd' || f->f == 'i' || f->f == 'D')
+		return(handle_dDi(f));
+	else if (f->f == 'c' || f->f == 'C')
 		return(handle_c(f, t));
 	else if (f->f == '%')
 		return(ft_chrstr('%'));
